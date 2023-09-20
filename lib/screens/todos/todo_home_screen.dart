@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:my_new_project/common/methods.dart';
@@ -34,7 +35,7 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
   void initializeTodos() async {
     final todos = await HiveService.getTodosFromLocal();
     developer.log('Todos from local = $todos');
-    for(var todo in todos){
+    for (var todo in todos) {
       developer.log('Todos from local = ${todo.id}');
     }
 
@@ -72,46 +73,97 @@ class _TodoHomeScreenState extends State<TodoHomeScreen> {
         body: SizedBox(
           height: CommonMethods.screenHeight,
           width: CommonMethods.screenWidth,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: ThemeConstants.defaultHorPadding -
-                    ThemeConstants.defaultVerticalSpacing,
-              ),
-              Expanded(
-                child: Obx(
-                  () {
-                    TodoController todoController = Get.find();
-                    PriorityViewController priorityController = Get.find();
-                    // String displayPriority = priorityController.item.value;
-                    PriorityEnum? displayPriority =
-                        priorityController.item.value;
-                    List<TodoModel> allTodos = todoController.todos;
-                    List<TodoModel> todoListToDisplay = [];
-                    if (displayPriority == null) {
-                      todoListToDisplay = allTodos;
-                    } else {
-                      todoListToDisplay = allTodos
-                          .where(
-                              (element) => element.priority == displayPriority)
-                          .toList();
-                    }
-
-                    return ListView.builder(
-                      itemCount: todoListToDisplay.length,
-                      itemBuilder: (context, index) {
-                        return todoCard(
-                          context,
-                          todoListToDisplay[index],
-                        );
-                      },
-                    );
-                  },
+          child: Padding(
+            padding: EdgeInsets.all(ThemeConstants.defaultContentPadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 3,
+                  // height: ThemeConstants.defaultHorPadding -
+                  //     ThemeConstants.defaultVerticalSpacing,
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Obx(
+                    () {
+                      TodoController todoController = Get.find();
+                      PriorityViewController priorityController = Get.find();
+                      // String displayPriority = priorityController.item.value;
+                      PriorityEnum? displayPriority =
+                          priorityController.item.value;
+                      List<TodoModel> allTodos = todoController.todos;
+                      List<TodoModel> todoListToDisplay = [];
+                      if (displayPriority == null) {
+                        todoListToDisplay = allTodos;
+                      } else {
+                        todoListToDisplay = allTodos
+                            .where((element) =>
+                                element.priority == displayPriority)
+                            .toList();
+                      }
+
+                      return SingleChildScrollView(
+                        child: StaggeredGrid.count(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing:
+                              ThemeConstants.defaultContentPadding,
+
+                          children: todoListToDisplay
+                              .map((todo) => todoCard(context, todo))
+                              .toList(),
+                          // children: [
+                          //   StaggeredGridTile.fit(
+                          //     crossAxisCellCount: 1,
+                          //     child: Container(
+                          //       height: 100,
+                          //       color: Colors.red,
+                          //       child: Text('hello'),
+                          //     ),
+                          //   ),
+                          //   StaggeredGridTile.fit(
+                          //     crossAxisCellCount: 1,
+                          //     child: Container(
+                          //       height: 200,
+                          //       color: Colors.red,
+                          //       child: Text('hello'),
+                          //     ),
+                          //   ),
+                          //   StaggeredGridTile.fit(
+                          //     crossAxisCellCount: 1,
+                          //     child: Container(
+                          //       height: 150,
+                          //       color: Colors.red,
+                          //       child: Text('hello'),
+                          //     ),
+                          //   ),
+                          //   StaggeredGridTile.fit(
+                          //     crossAxisCellCount: 1,
+                          //     child: Container(
+                          //       height: 250,
+                          //       color: Colors.red,
+                          //       child: Text('hello'),
+                          //     ),
+                          //   ),
+                          // ],
+                        ),
+                      );
+
+                      // return ListView.builder(
+                      //   itemCount: todoListToDisplay.length,
+                      //   itemBuilder: (context, index) {
+                      //     return todoCard(
+                      //       context,
+                      //       todoListToDisplay[index],
+                      //     );
+                      //   },
+                      // );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         // floatingActionButton: FloatingActionButton.extended(

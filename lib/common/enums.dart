@@ -7,3 +7,7 @@ enum OperationEnum{
 enum SnackBarType{
   success, error, warning, general
 }
+
+// enum NotificationType{
+//
+// }

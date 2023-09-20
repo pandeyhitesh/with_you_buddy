@@ -1,11 +1,15 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_new_project/constants/hive_keys/hive_keys.dart';
 // import 'package:hive/hive.dart';
 import 'package:my_new_project/screens/todos/todo_home_screen.dart';
 import 'package:my_new_project/services/navigation_service.dart';
+import 'package:my_new_project/services/notification_service/notification_service.dart';
 import 'package:my_new_project/services/storage_service/todo_hive_model.dart';
 import 'package:my_new_project/states/controller/todo_controller.dart';
 import 'package:my_new_project/states/controller/utilities/priority_view_controller.dart';
@@ -30,10 +34,10 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 // final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
 // StreamController<ReceivedNotification>.broadcast();
 
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // firebase initialize
+  // Firebase.initializeApp();
   await Hive.initFlutter();
   // Hive.registerAdapter(TodoHiveModelAdapter());
   // await Hive.openBox(StorageKeys.box);
@@ -47,6 +51,26 @@ Future<void> main() async {
 
   // initialize AndroidAlarmManager
   await AndroidAlarmManager.initialize();
+
+  // await FirebaseMessaging.instance.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+
+  // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+  //     if (!isAllowed) {
+  //       AwesomeNotifications().requestPermissionToSendNotifications();
+  //     }
+  //   });
+
+  // initialize the awesome notifications
+  NotificationService.initializeAwesomeNotifications();
+
   runApp(
     const GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -55,8 +79,27 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // Only after at least the action method is set, the notification events are delivered
+
+    // AwesomeNotifications().setListeners(
+    //     onActionReceivedMethod:         NotificationController.onActionReceivedMethod,
+    //     onNotificationCreatedMethod:    NotificationController.onNotificationCreatedMethod,
+    //     onNotificationDisplayedMethod:  NotificationController.onNotificationDisplayedMethod,
+    //     onDismissActionReceivedMethod:  NotificationController.onDismissActionReceivedMethod
+    // );
+
+    super.initState();
+  }
 
   // This widget is the root of your application.
   @override
@@ -67,7 +110,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       navigatorKey: NavigationService.navigatorKey,
       debugShowCheckedModeBanner: false,
-      darkTheme: darkTheme,
+      darkTheme: ThemeColors.darkTheme,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -80,9 +123,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const TestAlarm(),
+      home: const TodoHomeScreen(),
     );
   }
 }
-
-

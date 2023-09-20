@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_new_project/services/notification_service/notification_service.dart';
+import 'package:my_new_project/states/models/todos/todo_model.dart';
 import 'package:my_new_project/theme/button_styles.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -30,13 +32,18 @@ class TestAlarm extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await AndroidAlarmManager.oneShot(
-              const Duration(seconds: 1),
-              0,
-              callback,
-              exact: true,
-              wakeup: true,
-            );
+
+            await NotificationService.createNewNotification(todo: TodoModel());
+
+
+            // --------------------------------------------
+            // await AndroidAlarmManager.oneShot(
+            //   const Duration(seconds: 1),
+            //   0,
+            //   callback,
+            //   exact: true,
+            //   wakeup: true,
+            // );
           },
           style: ButtonStyles.popUpActionButtonStyle,
           child: const Text('Ring Now'),

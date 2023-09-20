@@ -1,10 +1,18 @@
-
-
 import 'package:hive/hive.dart';
 
 import '../../../common/type_defs.dart';
 
 class WeekDays {
+  static List<String> crontabDays = [
+    'SUN',
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT'
+  ];
+
   static List<WeekDays> weekDays = [
     WeekDays(id: 01, title: 'S'),
     WeekDays(id: 02, title: 'M'),
@@ -18,7 +26,6 @@ class WeekDays {
   final Id id;
   String title;
   bool isActive;
-
 
   WeekDays({
     required this.id,
@@ -53,11 +60,11 @@ class WeekDays {
       isActive: map['isActive'] as bool,
     );
   }
+
+  String get getCrontabDay => crontabDays[id - 1];
 }
 
-
 // ----------------- WeekDays Adapter -----------------//
-
 
 class WeekDaysAdapter extends TypeAdapter<WeekDays> {
   @override

@@ -1,8 +1,10 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:my_new_project/common/enums.dart';
 import 'package:my_new_project/common/methods.dart';
 import 'package:my_new_project/screens/todos/methods/validators/create_todo_validator.dart';
+import 'package:my_new_project/services/notification_service/notification_service.dart';
 
 import '../../../services/storage_service/hive_service.dart';
 import '../../../states/controller/new_todo_controller.dart';
@@ -80,6 +82,10 @@ createNewTodoMethod({
     await HiveService.addNewTodoToLocal(newTodo);
   }
   developer.log(newTodo.toJson().toString());
+
+  AwesomeNotifications().cancelAllSchedules();
+  // NotificationService.createNewNotification(todo: newTodo);
+  developer.log('Reminder Created.');
 
   controller.updateNewTodo(NewTodoController.newTodoStatic.copyWith());
 
